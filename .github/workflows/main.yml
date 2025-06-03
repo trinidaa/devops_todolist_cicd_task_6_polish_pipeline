@@ -104,11 +104,11 @@ jobs:
       with:
         push: true
         context: ./src
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.DockerImageName }}:${{ github.sha }}
+        tags: ${{ env.DockerImageName }}:${{ github.sha }}
 
   helm-ci:
     runs-on: ubuntu-latest
-    needs: python-ci
+    needs: [docker-ci, python-ci]
     if: github.ref_name == 'main' || github.ref_name == 'test/develop'
     name: Helm CI
     steps:
@@ -119,7 +119,7 @@ jobs:
         path: .
 
     - name: Set Up Helm
-      uses: azure/setup-helm@v4.2.0
+      uses: azure/setup-helm@v4.3.0
 
     - name: Lint helm
       run: helm lint ./todoapp/
@@ -137,6 +137,7 @@ jobs:
         path: ./*.tgz
 
   deploy-helm-dev:
+    if: github.ref_name == 'main' || github.ref_name == 'test/develop'
     name: Deploy helm to Development
     uses: ./.github/workflows/reusable-deployment.yml
     needs: [helm-ci, docker-ci]
@@ -146,6 +147,7 @@ jobs:
       version: ${{ github.sha }}
 
   deploy-helm-stg:
+    if: github.ref_name == 'main' || github.ref_name == 'test/develop'
     name: Deploy helm to Staging
     uses: ./.github/workflows/reusable-deployment.yml
     needs: [deploy-helm-dev]
