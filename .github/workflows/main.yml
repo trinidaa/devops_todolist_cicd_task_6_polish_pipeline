@@ -7,6 +7,22 @@ on:
     branches: ["main", "test/develop"]
   pull_request:
     branches: ["main", "test/develop"]
+  workflow_dispatch:
+    inputs:
+      python-version:
+        description: 'Python version to deploy (3.8 or 3.9)'
+        required: true
+        default: '3.8'
+        type: choice
+        options: [3.8, 3.9]
+
+      os-type:
+        description: 'OS type to deploy (ubuntu-latest or windows-latest)'
+        required: true
+        default: 'ubuntu-latest'
+        type: choice
+        options: [ubuntu-latest, windows-latest]
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -90,7 +106,7 @@ jobs:
     - uses: actions/download-artifact@v4
       name: Download python artifacts
       with:
-        name: python-artifacts-3.8-ubuntu-latest
+        name: python-artifacts-${{ inputs.python-version }}-${{ inputs.os-type }}
         path: .
 
     - name: Login to Docker Hub
@@ -115,7 +131,7 @@ jobs:
 
     - uses: actions/download-artifact@v4
       with:
-        name: helm-artifacts-3.8-ubuntu-latest
+        name: helm-artifacts-${{ inputs.python-version }}-${{ inputs.os-type }}
         path: .
 
     - name: Set Up Helm
