@@ -195,7 +195,6 @@ jobs:
     with:
       environment: development
       version: ${{ github.sha }}
-      helm-package: helm-package-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
 
   deploy-helm-stg:
     if: github.ref_name == 'main' || github.ref_name == 'test/develop'
@@ -208,4 +207,3 @@ jobs:
       version: ${{ github.sha }}
       helm-values-path: ./todoapp/values/stg.yaml
       helm-release-name: todoapp-staging
-      helm-package: helm-package-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
