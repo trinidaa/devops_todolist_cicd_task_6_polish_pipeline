@@ -98,3 +98,14 @@ jobs:
           --set todoapp.secrets.DB_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
           --set todoapp.secrets.DB_HOST="${{ secrets.APP_DB_HOST }}" \
           --set todoapp.image.tag=${{ github.sha }}
+          
+          echo "=== Pods created ==="
+             kubectl get pods -l app.kubernetes.io/instance=${{ inputs.helm-release-name }} -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+
+             # Получаем StatefulSets
+             echo "=== StatefulSets ==="
+             kubectl get statefulsets -l app.kubernetes.io/instance=${{ inputs.helm-release-name }} -o name
+
+             # Получаем Deployments
+             echo "=== Deployments ==="
+             kubectl get deployments -l app.kubernetes.io/instance=${{ inputs.helm-release-name }} -o name
