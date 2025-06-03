@@ -17,6 +17,8 @@ on:
       helm-release-name:
         default: todoapp
         type: string
+env:
+  DockerImageName: ${{ secrets.DOCKERHUB_USERNAME }}/todoapp
 jobs:
     deploy-helm:
       name: ${{ inputs.environment }}
