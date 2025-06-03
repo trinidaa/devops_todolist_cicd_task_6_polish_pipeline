@@ -110,7 +110,7 @@ jobs:
 
   deploy-selected:
     needs: python-ci
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == 'test/develop'
     runs-on: ubuntu-latest
     steps:
       - name: Download selected python artifact
