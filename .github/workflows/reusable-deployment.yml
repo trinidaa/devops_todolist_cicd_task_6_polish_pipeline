@@ -33,24 +33,43 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: helm-artifacts
+          name: helm-artifacts-3.8-ubuntu-latest
           path: .
 
       - uses: actions/download-artifact@v4
         with:
-          name: kind-cluster
+          name: kind-cluster-3.8-ubuntu-latest
           path: .
 
       - name: Set Up Helm
-        uses: azure/setup-helm@v4.2.0
+        uses: azure/setup-helm@v4.3.0
 
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v4
+
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1
         with:
           config: ./cluster.yml
+
+      - name: Verify Image Availability
+        run: |
+          IMAGE="${{ env.DockerImageName }}:${{ inputs.version }}"
+          echo "Checking image: $IMAGE"
+          if docker image inspect $IMAGE >/dev/null 2>&1; then
+            echo "✅ Image exists locally"
+          else
+            echo "⚠️ Image not found locally, trying to pull..."
+            docker pull $IMAGE || {
+              echo "❌ Failed to pull image $IMAGE"
+            exit 1
+          }
+          echo "✅ Successfully pulled image"
+          fi
 
       - name: Dry Run Helm
         run: |
@@ -79,4 +98,3 @@ jobs:
           --set todoapp.secrets.DB_PASSWORD="${{ secrets.MYSQL_PASSWORD }}" \
           --set todoapp.secrets.DB_HOST="${{ secrets.APP_DB_HOST }}" \
           --set todoapp.image.tag=${{ github.sha }}
-
