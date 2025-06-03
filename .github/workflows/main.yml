@@ -31,8 +31,6 @@ concurrency:
 env:
   PythonVersion: 3.8
   DockerImageName: ${{ secrets.DOCKERHUB_USERNAME }}/todoapp
-  PYTHON_VERSION: ${{ github.event.inputs.python-version || '3.8' }}
-  OS_TYPE: ${{ github.event.inputs.os-type || 'ubuntu-latest' }}
 
 jobs:
   python-ci:
