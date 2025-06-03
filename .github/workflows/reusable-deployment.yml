@@ -109,3 +109,7 @@ jobs:
              # Получаем Deployments
              echo "=== Deployments ==="
              kubectl get deployments -l app.kubernetes.io/instance=${{ inputs.helm-release-name }} -o name
+
+             # Получаем Services
+             echo "=== Services ==="
+             kubectl get services -l app.kubernetes.io/instance=${{ inputs.helm-release-name }} -o name
