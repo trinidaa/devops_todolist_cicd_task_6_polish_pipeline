@@ -14,17 +14,14 @@ on:
         required: true
         default: '3.8'
         type: choice
-        options:
-          - '3.8'
-          - '3.9'
+        options: [3.8, 3.9]
+
       os-type:
         description: 'OS type to deploy (ubuntu-latest or windows-latest)'
         required: true
         default: 'ubuntu-latest'
         type: choice
-        options:
-          - 'ubuntu-latest'
-          - 'windows-latest'
+        options: [ubuntu-latest, windows-latest]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
