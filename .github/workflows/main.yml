@@ -116,12 +116,12 @@ jobs:
       - name: Download selected python artifact
         uses: actions/download-artifact@v4
         with:
-          name: python-artifacts-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
+          name: python-artifacts-${{ matrix.os-type }}-${{ matrix.python-version }}
 
       - name: Show selected deployment
         run: |
-          echo "Deploying Python ${{ github.event.inputs.python-version }} on ${{ github.event.inputs.os-type }}"
-          echo "Artifact: python-artifacts-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}"
+          echo "Deploying Python ${{ matrix.python-version }} on ${{ matrix.OsType }}"
+          echo "Artifact: python-artifacts-${{ matrix.OsType }}-${{ matrix.python-version }}"
 
   helm-ci:
     runs-on: ubuntu-latest
@@ -150,7 +150,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./*.tgz
-          name: helm-package-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
+          name: helm-package-${{ matrix.OsType }}-${{ github.event.inputs.python-version }}
 
   docker-ci:
     name: Build and Push Image
