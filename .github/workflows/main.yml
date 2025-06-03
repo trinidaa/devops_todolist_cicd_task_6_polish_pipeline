@@ -63,7 +63,7 @@ jobs:
       - name: Upload python artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: python-artifacts
+          name: python-artifacts-${{ matrix.PythonVersion }}-${{ matrix.OsType }}
           path: .
 
       - name: Upload helm artifacts
