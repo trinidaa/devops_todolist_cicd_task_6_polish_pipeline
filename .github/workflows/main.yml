@@ -116,15 +116,12 @@ jobs:
       - name: Download selected python artifact
         uses: actions/download-artifact@v4
         with:
-          name: python-artifacts-${{ github.event.inputs.os-type }}- \
-                    ${{ github.event.inputs.python-version }}
+          name: python-artifacts-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
 
       - name: Show selected deployment
         run: |
-          echo "Deploying Python ${{ github.event.inputs.python-version }} \
-                                on ${{ github.event.inputs.os-type }}"
-          echo "Artifact: python-artifacts-${{ github.event.inputs.os-type }} \
-                                    -${{ github.event.inputs.python-version }}"
+          echo "Deploying Python ${{ github.event.inputs.python-version }} on ${{ github.event.inputs.os-type }}"
+          echo "Artifact: python-artifacts-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}"
 
   helm-ci:
     runs-on: ubuntu-latest
@@ -134,8 +131,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: helm-artifacts-${{ github.event.inputs.os-type }} \
-                          -${{ github.event.inputs.python-version }}
+          name: helm-artifacts-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
           path: .
 
       - name: Set Up Helm
@@ -154,8 +150,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           path: ./*.tgz
-          name: helm-package-${{ github.event.inputs.os-type }} \
-                    -${{ github.event.inputs.python-version }}
+          name: helm-package-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
 
   docker-ci:
     name: Build and Push Image
@@ -166,8 +161,7 @@ jobs:
       - uses: actions/download-artifact@v4
         name: Download python artifacts
         with:
-          name: python-artifacts-${{ github.event.inputs.os-type }} \
-                          -${{ github.event.inputs.python-version }}
+          name: python-artifacts-${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}
           path: .
 
       - name: Login to Docker Hub
@@ -183,8 +177,7 @@ jobs:
           context: ./src
           tags: |
             ${{ env.DockerImageName }}:${{ github.sha }}
-            ${{ env.DockerImageName }}:${{ github.event.inputs.os-type }} \
-                  -${{ github.event.inputs.python-version }}-${{ github.sha }}
+            ${{ env.DockerImageName }}:${{ github.event.inputs.os-type }}-${{ github.event.inputs.python-version }}-${{ github.sha }}
 
   deploy-helm-dev:
     if: github.ref_name == 'main' || github.ref_name == 'test/develop'
