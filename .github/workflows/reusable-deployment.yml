@@ -17,8 +17,10 @@ on:
       helm-release-name:
         default: todoapp
         type: string
+
 env:
   DockerImageName: ${{ secrets.DOCKERHUB_USERNAME }}/todoapp
+
 jobs:
     deploy-helm:
       name: ${{ inputs.environment }}
@@ -29,8 +31,8 @@ jobs:
       - name: Set inputs
         id: set-inputs
         run: |
-            echo "python_version=${{ github.event.inputs.python-version || '3.8' }}" >> $GITHUB_OUTPUT
-            echo "os_type=${{ github.event.inputs.os-type || 'ubuntu-latest' }}" >> $GITHUB_OUTPUT
+            echo "python_version=${{ github.event.inputs.python-version }}" >> $GITHUB_OUTPUT
+            echo "os_type=${{ github.event.inputs.os-type }}" >> $GITHUB_OUTPUT
 
       - uses: actions/download-artifact@v4
         with:
